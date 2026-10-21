@@ -2,27 +2,27 @@
 
 **Live: https://cektag.xsrazy.web.id**
 
-CekTag adalah layanan web untuk mengecek tag GetContact dari sebuah nomor HP: daftar nama atau julukan yang dipakai orang lain untuk menyimpan nomor itu di kontak mereka. Berguna untuk mengenali nomor tak dikenal dan mendeteksi indikasi spam. Setiap pengecekan berharga Rp 2.000, dibayar via QRIS, tanpa daftar dan tanpa langganan.
+CekTag is a web service that looks up the GetContact tags of a phone number: the list of names or nicknames other people saved that number under in their contacts. It is used to identify unknown callers and spot spam. Each check costs Rp 2,000, paid via QRIS, with no registration and no subscription.
 
-## Isi Web
+## Site Contents
 
-- **Halaman utama:** form pengecekan nomor (format 08xx dirapikan otomatis), penjelasan cara kerja, dan FAQ.
-- **Alur cek:** pengguna memasukkan nomor, membayar Rp 2.000 via QRIS, lalu sistem mengambil data tag terbaru dari GetContact secara real-time (di bawah 10 detik) dan menampilkan daftar tag-nya.
-- **Halaman Privasi:** menjelaskan kebijakan data. Setiap pengecekan langsung ke GetContact dan hasilnya tidak disimpan; di log, nomor HP dan IP hanya dicatat dalam bentuk hash yang tidak bisa dibaca balik.
-- **Panel admin:** login terlindungi untuk memantau transaksi dan penggunaan kuota GetContact.
+- **Homepage:** a check form (08xx numbers are formatted automatically), an explanation of how it works, and an FAQ section.
+- **Check flow:** the user enters a number, pays Rp 2,000 via QRIS, and the system fetches the latest tags from GetContact in real time (under 10 seconds) and displays the list.
+- **Privacy page:** explains the data policy. Every check goes straight to GetContact in real time and results are not stored; in the logs, phone numbers and IP addresses are only recorded as hashes that cannot be read back.
+- **Admin panel:** a protected login to monitor transactions and GetContact quota usage.
 
-Seperti tertulis di situsnya, akurasi tag bergantung pada data crowdsource GetContact, jadi hasil hanya gambaran, bukan patokan pasti.
+As the site itself states, tag accuracy depends on GetContact's crowdsourced data, so results are an indication, not a certainty.
 
 ## Frontend
 
-- Next.js 14 (App Router) dengan React dan TypeScript.
-- Halaman publik: beranda dengan form cek, halaman hasil, dan halaman privasi.
-- Proteksi formulir memakai Cloudflare Turnstile.
+- Next.js 14 (App Router) with React and TypeScript.
+- Public pages: home with the check form, the result view, and the privacy page.
+- Forms are protected with Cloudflare Turnstile.
 
 ## Backend
 
-- API route Next.js untuk membuat invoice pembayaran, menerima webhook pembayaran, dan menembak API GetContact saat cek dijalankan.
-- Pembayaran QRIS memakai gateway SayaBayar: invoice dibuat per pengecekan dan status dibayar dikonfirmasi lewat webhook.
-- Kuota dan sesi pembayaran dicatat di Upstash Redis, dengan fallback penyimpanan in-memory.
-- Kata sandi admin tersimpan sebagai hash bcrypt.
-- File `.secrets.json` (kredensial lokal) tidak pernah masuk repo; file itu masuk `.gitignore`.
+- Next.js API routes create payment invoices, receive payment webhooks, and call the GetContact API when a check runs.
+- QRIS payments use the SayaBayar gateway: one invoice per check, with paid status confirmed through its webhook.
+- Quota and payment sessions are stored in Upstash Redis, with an in-memory storage fallback.
+- The admin password is stored as a bcrypt hash.
+- The local `.secrets.json` credentials file is never committed; it is listed in `.gitignore`.
