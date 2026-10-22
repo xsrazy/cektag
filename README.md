@@ -1,28 +1,42 @@
 # CekTag
 
-**Live: https://cektag.xsrazy.web.id**
+Look up the GetContact tags of a phone number: the names and nicknames other people saved that number under in their contacts. Made to identify unknown callers and spot spam.
 
-CekTag is a web service that looks up the GetContact tags of a phone number: the list of names or nicknames other people saved that number under in their contacts. It is used to identify unknown callers and spot spam. Each check costs Rp 2,000, paid via QRIS, with no registration and no subscription.
+Live: https://cektag.xsrazy.web.id
 
-## Site Contents
+## About
 
-- **Homepage:** a check form (08xx numbers are formatted automatically), an explanation of how it works, and an FAQ section.
-- **Check flow:** the user enters a number, pays Rp 2,000 via QRIS, and the system fetches the latest tags from GetContact in real time (under 10 seconds) and displays the list.
-- **Privacy page:** explains the data policy. Every check goes straight to GetContact in real time and results are not stored; in the logs, phone numbers and IP addresses are only recorded as hashes that cannot be read back.
-- **Admin panel:** a protected login to monitor transactions and GetContact quota usage.
+CekTag is a paid lookup service for Indonesian phone numbers. Enter a number, and CekTag shows how other people have saved it in their contacts, pulled live from the GetContact database. Each check costs Rp 2,000, paid via QRIS, with no registration and no subscription.
 
-As the site itself states, tag accuracy depends on GetContact's crowdsourced data, so results are an indication, not a certainty.
+## Features
 
-## Frontend
+- Check form with automatic formatting for 08xx numbers
+- Real-time tag lookup from GetContact, with results in under 10 seconds
+- Pay per check: Rp 2,000 via QRIS, no account and no subscription
+- Privacy by design: results are not stored, and phone numbers and IP addresses appear in logs only as hashes that cannot be read back
+- Admin panel with protected login to monitor transactions and GetContact quota usage
+- FAQ and privacy pages on the site explaining how tags work and what data is kept
 
-- Next.js 14 (App Router) with React and TypeScript.
-- Public pages: home with the check form, the result view, and the privacy page.
-- Forms are protected with Cloudflare Turnstile.
+## How it works
 
-## Backend
+1. The visitor enters the phone number they want to check
+2. They pay Rp 2,000 via QRIS (one invoice per check, through the SayaBayar gateway)
+3. Once the payment webhook confirms the payment, CekTag queries the GetContact API in real time
+4. The list of tags for that number is displayed
 
-- Next.js API routes create payment invoices, receive payment webhooks, and call the GetContact API when a check runs.
-- QRIS payments use the SayaBayar gateway: one invoice per check, with paid status confirmed through its webhook.
-- Quota and payment sessions are stored in Upstash Redis, with an in-memory storage fallback.
-- The admin password is stored as a bcrypt hash.
-- The local `.secrets.json` credentials file is never committed; it is listed in `.gitignore`.
+## Architecture
+
+- Frontend: Next.js 14 (App Router) with React and TypeScript; public pages are the home check form, the result view, and the privacy page
+- Forms are protected with Cloudflare Turnstile
+- Backend: Next.js API routes create payment invoices, receive payment webhooks, and call the GetContact API
+- Storage: quota and payment sessions live in Upstash Redis, with an in-memory storage fallback
+- Admin access: the admin password is stored as a bcrypt hash
+- Secrets: the local `.secrets.json` credentials file is never committed; it is listed in `.gitignore`
+
+## Notes
+
+- Tag accuracy depends on GetContact's crowdsourced data. Results are an indication, not a certainty
+
+## License
+
+MIT. See [LICENSE](LICENSE).
